@@ -1,58 +1,57 @@
-import { CalendarDays } from "@/app/components/icons";
+import Link from "next/link";
+import { CalendarDays, ReceiptText, SoccerBall } from "@/app/components/icons";
 import ScheduleSection from "@/app/components/ScheduleSection";
 
 export default function Home() {
-  const items = [
-    "Diskon 10% buat semua pertandingan!",
-    "Ada benefit eksklusif khusus member, lho",
-    "Jadi member cuma Rp 100.000 setahun",
-    "Member juga dapet diskon 10% buat semua produk!",
-  ];
-
   return (
-    <div>
-      <div className="flex flex-col items-center justify-center">
-        <div className="marquee w-full overflow-hidden bg-blue-400 py-2">
-          <div className="marquee-track flex w-max">
-            {[...items, ...items].map((text, i) => (
-              <div key={i} className="whitespace-nowrap pr-16">
-                {text}
-              </div>
-            ))}
+    <main className="w-full">
+      {/* Hero: fills the screen under the sticky header on desktop, capped so it never gets absurdly tall */}
+      <section className="relative isolate flex min-h-[34rem] w-full items-center overflow-hidden sm:min-h-[38rem] lg:h-[calc(100svh-6.25rem)] lg:min-h-[36rem] lg:max-h-[48rem]">
+        <img
+          src="https://images.pexels.com/photos/274506/pexels-photo-274506.jpeg?auto=compress&cs=tinysrgb&w=1920"
+          alt="Bola di lapangan hijau"
+          className="absolute inset-0 -z-10 size-full object-cover object-[70%_center]"
+        />
+        <div className="absolute inset-0 -z-10 bg-linear-to-t from-slate-950/90 via-blue-950/60 to-blue-950/30 md:bg-linear-to-r md:from-slate-950/85 md:via-blue-950/55 md:to-transparent" />
+
+        <div className="mx-auto w-full max-w-7xl px-4 py-16 md:px-8">
+          <div className="max-w-2xl">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white ring-1 ring-white/20 backdrop-blur">
+              <SoccerBall className="size-4" />
+              Komunitas football & mini soccer
+            </span>
+
+            <h1 className="mt-5 text-4xl leading-[1.05] font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
+              <span className="block">Fun game.</span>
+              <span className="block">Good vibes.</span>
+              <span className="block text-blue-400">#KitaMainLagi</span>
+            </h1>
+
+            <p className="mt-5 max-w-xl text-base text-slate-200 sm:text-lg">
+              Main bareng komunitas seru tiap minggu. Tinggal pilih jadwal, booking slot, dateng, terus main. Gampang!
+            </p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#jadwal"
+                className="flex items-center justify-center gap-2 rounded-full bg-blue-500 px-7 py-3.5 font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-600"
+              >
+                <CalendarDays className="size-5" />
+                Cek Jadwal Terbaru
+              </a>
+              <Link
+                href="/payment"
+                className="flex items-center justify-center gap-2 rounded-full border border-white/70 bg-white/10 px-7 py-3.5 font-semibold text-white backdrop-blur transition hover:bg-white/20"
+              >
+                <ReceiptText className="size-5" />
+                Cek Pembayaran
+              </Link>
+            </div>
           </div>
         </div>
-        <div className="w-full flex flex-wrap items-center justify-center p-4 gap-4 sm:gap-8">
-          <div>Test</div>
-          <div>Test</div>
-          <div>Test</div>
-          <div>Test</div>
-        </div>
-        <div className="relative flex min-h-96 w-full items-center overflow-hidden">
-          <img
-            src="https://images.pexels.com/photos/274506/pexels-photo-274506.jpeg"
-            alt="Blax Hero Banner"
-            className="absolute inset-0 size-full object-cover"
-          />
-          <div className="absolute inset-0 bg-blue-500/30"></div>
-          <div className="relative px-4 py-12 sm:p-10 md:p-16">
-            <div className="text-4xl sm:text-5xl md:text-6xl text-white font-bold">
-              Fun game. Good vibes.
-              <br />
-              #KitaMainLagi
-            </div>
-            <div className="flex flex-wrap items-center gap-4 pt-8">
-              <div>
-                <a href="#jadwal" className="flex items-center gap-2 bg-blue-500 text-white font-semibold rounded-full p-4">
-                  <CalendarDays className="size-6" />
-                  Cek Jadwal Terbaru
-                </a>
-              </div>
-              <div>Test</div>
-            </div>
-          </div>
-        </div>
-        <ScheduleSection />
-      </div>
-    </div>
+      </section>
+
+      <ScheduleSection />
+    </main>
   );
 }

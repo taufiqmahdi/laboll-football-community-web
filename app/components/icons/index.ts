@@ -2,12 +2,19 @@
 // drawn in lucide style where lucide has nothing that fits.
 export {
   ArrowRight,
+  BadgePercent,
   CalendarDays,
+  Camera,
   Check,
   Clock,
+  Crown,
   LayoutGrid,
   MapPin,
+  Menu,
+  ReceiptText,
+  ShoppingBag,
   Users,
+  X,
   type LucideIcon,
 } from "lucide-react";
 

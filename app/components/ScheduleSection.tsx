@@ -54,7 +54,7 @@ export default function ScheduleSection() {
   const thisWeekCount = today ? schedules.filter((s) => isInSameWeek(s.date, today)).length : null;
 
   return (
-    <section id="jadwal" className="w-full bg-slate-50 py-12 md:py-16">
+    <section id="jadwal" className="w-full scroll-mt-26 bg-slate-50 py-12 md:py-16">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         {/* Heading */}
         <div className="flex flex-col items-center text-center">

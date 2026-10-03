@@ -13,7 +13,7 @@ export default function ComingSoon({
   children?: ReactNode;
 }) {
   return (
-    <main className="flex min-h-screen w-full items-center justify-center bg-slate-50 px-4 py-16">
+    <main className="flex w-full flex-1 items-center justify-center bg-slate-50 px-4 py-20">
       <div className="w-full max-w-lg text-center">
         <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-blue-100 text-blue-600">
           <SoccerBall className="size-8" />
