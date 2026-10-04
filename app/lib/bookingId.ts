@@ -1,11 +1,11 @@
-// Booking ID format: BLK-YYMMDD-XXXX
-//   BLK     brand prefix
+// Booking ID format: LBL-YYMMDD-XXXX
+//   LBL     brand prefix
 //   YYMMDD  booking date
 //   XXXX    4-character code (letters/numbers)
 
-export const BOOKING_ID_EXAMPLE = "BLK-261004-Q9M5";
+export const BOOKING_ID_EXAMPLE = "LBL-261004-Q9M5";
 
-const PREFIX = "BLK";
+const PREFIX = "LBL";
 const RAW_LENGTH = 13; // 3 + 6 + 4, without dashes
 
 export type CheckState = "pending" | "ok" | "error";
@@ -17,7 +17,7 @@ export type BookingIdCheck = {
 };
 
 // Uppercases, drops anything that isn't a letter/number, and re-inserts the dashes,
-// so typing or pasting "blk2610 04q9m5" becomes "BLK-261004-Q9M5".
+// so typing or pasting "lbl2610 04q9m5" becomes "LBL-261004-Q9M5".
 export function formatBookingId(input: string) {
   const raw = input.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, RAW_LENGTH);
   return [raw.slice(0, 3), raw.slice(3, 9), raw.slice(9)].filter(Boolean).join("-");
@@ -53,7 +53,7 @@ export function checkBookingId(formatted: string): BookingIdCheck {
   const codeState: CheckState = code.length === 4 ? "ok" : "pending";
 
   const checks = [
-    { label: "Diawali BLK", state: prefixState },
+    { label: "Diawali LBL", state: prefixState },
     { label: "6 angka tanggal booking", state: dateState },
     { label: "4 kode unik", state: codeState },
   ];
@@ -62,7 +62,7 @@ export function checkBookingId(formatted: string): BookingIdCheck {
     return { status: "empty", message: `Contoh formatnya: ${BOOKING_ID_EXAMPLE}`, checks };
   }
   if (prefixState === "error") {
-    return { status: "invalid", message: "Booking ID selalu diawali BLK, ya.", checks };
+    return { status: "invalid", message: "Booking ID selalu diawali LBL, ya.", checks };
   }
   if (dateState === "error") {
     return { status: "invalid", message: dateMessage, checks };

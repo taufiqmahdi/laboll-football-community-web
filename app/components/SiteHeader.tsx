@@ -61,9 +61,9 @@ export default function SiteHeader() {
       {/* Navigation */}
       <nav className="relative border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 md:px-8 lg:grid lg:grid-cols-[1fr_auto_1fr]">
-          <Link href="/" className="flex items-center gap-2 justify-self-start" aria-label="Blaks, ke beranda">
+          <Link href="/" className="flex items-center gap-2 justify-self-start" aria-label="Laboll, ke beranda">
             <img src="/logo.svg" alt="" className="size-9 rounded-full" />
-            <span className="text-xl font-extrabold tracking-tight text-slate-900">BLAKS</span>
+            <span className="text-xl font-extrabold tracking-tight text-slate-900">LABOLL</span>
           </Link>
 
           <ul className="hidden items-center gap-1 lg:flex">

@@ -12,12 +12,12 @@ const pexels = (id: number) =>
 // Newest first.
 export const news: NewsArticle[] = [
   {
-    slug: "blaks-cup-season-3-dibuka",
+    slug: "laboll-cup-season-3-dibuka",
     date: "2026-10-03",
     image: pexels(1884576),
-    title: "Blaks Cup Season 3 Resmi Dibuka, Total Hadiahnya Rp 15 Juta!",
+    title: "Laboll Cup Season 3 Resmi Dibuka, Total Hadiahnya Rp 15 Juta!",
     excerpt:
-      "Pendaftaran Blaks Cup Season 3 udah dibuka. Ada 16 slot tim, fase grup plus gugur, dan hadiah total Rp 15 juta. Amankan slot timmu sebelum 15 Oktober, ya!",
+      "Pendaftaran Laboll Cup Season 3 udah dibuka. Ada 16 slot tim, fase grup plus gugur, dan hadiah total Rp 15 juta. Amankan slot timmu sebelum 15 Oktober, ya!",
   },
   {
     slug: "kenalan-sama-garuda-muda",

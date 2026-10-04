@@ -19,7 +19,7 @@ const socials: { label: string; href: string; Icon: LucideIcon }[] = [
 ];
 
 const contact = {
-  email: "halo@blaks.id",
+  email: "halo@laboll.id",
   phone: "+62 812-0000-0000",
   phoneHref: "tel:+6281200000000",
   address: "Jl. Kemang Raya No. 10, Jakarta Selatan 12730",
@@ -32,9 +32,9 @@ export default function SiteFooter() {
         <div className="grid gap-10 text-center md:grid-cols-[1.4fr_1fr] md:gap-16 md:text-left">
           {/* Brand */}
           <div className="flex flex-col items-center md:items-start">
-            <Link href="/" className="flex items-center gap-2" aria-label="Blaks, ke beranda">
+            <Link href="/" className="flex items-center gap-2" aria-label="Laboll, ke beranda">
               <img src="/logo.svg" alt="" className="size-10 rounded-full" />
-              <span className="text-2xl font-extrabold tracking-tight text-white">BLAKS</span>
+              <span className="text-2xl font-extrabold tracking-tight text-white">LABOLL</span>
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
               Komunitas football dan mini soccer buat siapa aja yang mau main bareng. Cari jadwal, ikut turnamen, dan
@@ -47,7 +47,7 @@ export default function SiteFooter() {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Blaks di ${label}`}
+                    aria-label={`Laboll di ${label}`}
                     title={label}
                     className="flex size-10 items-center justify-center rounded-full bg-white/5 text-slate-300 ring-1 ring-white/10 transition hover:bg-blue-500 hover:text-white hover:ring-blue-500"
                   >
@@ -84,7 +84,7 @@ export default function SiteFooter() {
 
         {/* Credit + tagline */}
         <div className="mt-12 flex flex-col items-center justify-between gap-2 border-t border-white/10 pt-6 text-xs text-slate-500 sm:flex-row">
-          <p>© {new Date().getFullYear()} Blaks. Semua hak dilindungi.</p>
+          <p>© {new Date().getFullYear()} Laboll. Semua hak dilindungi.</p>
           <p className="font-semibold text-slate-400">
             Fun game. Good vibes. <span className="text-blue-400">#KitaMainLagi</span>
           </p>

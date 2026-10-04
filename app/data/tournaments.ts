@@ -29,8 +29,8 @@ const pexels = (id: number) =>
 
 export const tournaments: Tournament[] = [
   {
-    id: "blaks-cup-3",
-    name: "Blaks Cup",
+    id: "laboll-cup-3",
+    name: "Laboll Cup",
     edition: "Season 3",
     category: "Football",
     status: "open",

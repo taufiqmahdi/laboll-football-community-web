@@ -38,7 +38,7 @@ export default function MerchandiseSection() {
     <Section id="merchandise">
       <SectionHeading
         Icon={ShoppingBag}
-        title="Merchandise Blaks"
+        title="Merchandise Laboll"
         subtitle="Jersey home, away, third, sampai edisi kolaborasi dan spesial. Pakai di lapangan, pakai juga buat nongkrong!"
       />
 

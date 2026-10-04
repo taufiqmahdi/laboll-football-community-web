@@ -1,7 +1,7 @@
 export type PaymentStatus = "paid" | "pending" | "expired";
 
 export type Booking = {
-  id: string; // BLK-YYMMDD-XXXX
+  id: string; // LBL-YYMMDD-XXXX
   scheduleId: string;
   playerName: string;
   role: "Player" | "GK";
@@ -15,7 +15,7 @@ export type Booking = {
 // Dummy data until there's a real API.
 const bookings: Booking[] = [
   {
-    id: "BLK-261001-A7K2",
+    id: "LBL-261001-A7K2",
     scheduleId: "sch-001",
     playerName: "Rizky",
     role: "Player",
@@ -25,7 +25,7 @@ const bookings: Booking[] = [
     paidAt: "1 Okt 2026, 14:20",
   },
   {
-    id: "BLK-261004-Q9M5",
+    id: "LBL-261004-Q9M5",
     scheduleId: "sch-002",
     playerName: "Dimas",
     role: "GK",
@@ -34,7 +34,7 @@ const bookings: Booking[] = [
     payBefore: "Senin, 5 Okt · 21:00",
   },
   {
-    id: "BLK-260928-Z3X8",
+    id: "LBL-260928-Z3X8",
     scheduleId: "sch-003",
     playerName: "Fajar",
     role: "Player",

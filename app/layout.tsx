@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Blaks · Fun game. Good vibes. #KitaMainLagi",
+  title: "Laboll · Fun game. Good vibes. #KitaMainLagi",
   description: "Cari jadwal football dan mini soccer bareng komunitas partner, amankan slotmu, terus main bareng!",
 };
 

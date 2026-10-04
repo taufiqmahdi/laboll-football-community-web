@@ -46,7 +46,7 @@ export const products: Product[] = [
   },
   {
     id: "collab-jersey-juara",
-    name: "Blaks x Jersey Juara",
+    name: "Laboll x Jersey Juara",
     edition: "Collab",
     status: "preorder",
     preorder: { closes: "2026-10-25", ships: "Dikirim pertengahan November" },

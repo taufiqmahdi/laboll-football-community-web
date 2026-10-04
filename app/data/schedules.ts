@@ -24,7 +24,7 @@ const pexels = (id: number) =>
   `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=800`;
 
 export const communities: Community[] = [
-  { id: "blaks", name: "Blaks FC", initials: "BF", color: "bg-blue-500", logo: "/communities/blaks.svg" },
+  { id: "laboll", name: "Laboll FC", initials: "LF", color: "bg-blue-500", logo: "/communities/laboll.svg" },
   {
     id: "sunday-league",
     name: "Sunday League JKT",
@@ -42,7 +42,7 @@ export const sportCategories: SportCategory[] = ["Football", "Mini Soccer"];
 export const schedules: Schedule[] = [
   {
     id: "sch-001",
-    communityId: "blaks",
+    communityId: "laboll",
     category: "Mini Soccer",
     image: pexels(3621104),
     date: "2026-10-03",
@@ -117,7 +117,7 @@ export const schedules: Schedule[] = [
   },
   {
     id: "sch-006",
-    communityId: "blaks",
+    communityId: "laboll",
     category: "Football",
     image: pexels(114296),
     date: "2026-10-08",
