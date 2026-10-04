@@ -1,8 +1,10 @@
-import Link from "next/link";
 import { CalendarDays, ReceiptText, SoccerBall } from "@/app/components/icons";
 import MerchandiseSection from "@/app/components/MerchandiseSection";
 import MerchantSection from "@/app/components/MerchantSection";
+import NewsSection from "@/app/components/NewsSection";
+import PaymentCheckSection from "@/app/components/PaymentCheckSection";
 import ScheduleSection from "@/app/components/ScheduleSection";
+import TournamentSection from "@/app/components/TournamentSection";
 
 export default function Home() {
   return (
@@ -41,21 +43,24 @@ export default function Home() {
                 <CalendarDays className="size-5" />
                 Cek Jadwal Terbaru
               </a>
-              <Link
-                href="/payment"
+              <a
+                href="#cek-pembayaran"
                 className="flex items-center justify-center gap-2 rounded-full border border-white/70 bg-white/10 px-7 py-3.5 font-semibold text-white backdrop-blur transition hover:bg-white/20"
               >
                 <ReceiptText className="size-5" />
                 Cek Pembayaran
-              </Link>
+              </a>
             </div>
           </div>
         </div>
       </section>
 
       <ScheduleSection />
+      <TournamentSection />
+      <PaymentCheckSection />
       <MerchantSection />
       <MerchandiseSection />
+      <NewsSection />
     </main>
   );
 }

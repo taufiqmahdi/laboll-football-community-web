@@ -16,6 +16,26 @@ export function formatRupiah(amount: number) {
   return `Rp ${amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
 }
 
+// "24 Okt"
+export function formatDayMonth(iso: string) {
+  const [, m, d] = iso.split("-").map(Number);
+  return `${d} ${MONTHS[m - 1]}`;
+}
+
+// 15000000 -> "15 juta" (or "15 jt" short), 2500000 -> "2,5 juta"
+export function formatJuta(amount: number, short = false) {
+  return `${String(amount / 1_000_000).replace(".", ",")} ${short ? "jt" : "juta"}`;
+}
+
+// Whole days from `from` to `to` (both YYYY-MM-DD).
+export function daysBetween(from: string, to: string) {
+  const ms = (iso: string) => {
+    const [y, m, d] = iso.split("-").map(Number);
+    return Date.UTC(y, m - 1, d);
+  };
+  return Math.round((ms(to) - ms(from)) / 86_400_000);
+}
+
 export function todayIso() {
   return toIso(new Date());
 }

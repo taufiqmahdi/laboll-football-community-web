@@ -29,8 +29,8 @@ const categoryIcon: Record<MerchantCategory, LucideIcon> = {
   Apparel: Shirt,
 };
 
-// Two rows: 3 per row on phones (6), 4 on tablets (8), 6 on desktop (12).
-const ROW: Breakpoint[] = [...Array<Breakpoint>(6).fill("base"), "sm", "sm", "lg", "lg", "lg", "lg"];
+// One row: 3 on phones, 4 on tablets, 6 on desktop.
+const ROW: Breakpoint[] = ["base", "base", "base", "sm", "lg", "lg"];
 
 const categoryOptions: { value: MerchantCategory | "all"; label: string; Icon: LucideIcon }[] = [
   { value: "all", label: "Semua", Icon: LayoutGrid },

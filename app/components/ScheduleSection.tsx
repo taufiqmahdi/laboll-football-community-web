@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import BrandAvatar from "@/app/components/BrandAvatar";
 import {
@@ -9,6 +9,7 @@ import {
   SectionHeading,
   SeeAllLink,
   SegmentedFilter,
+  SwipeRow,
 } from "@/app/components/SectionTemplate";
 import {
   CalendarDays,
@@ -30,17 +31,11 @@ import {
   type Schedule,
   type SportCategory,
 } from "@/app/data/schedules";
-import { formatDate, formatRupiah, isInSameWeek, todayIso } from "@/app/lib/format";
+import { formatDate, formatRupiah, isInSameWeek } from "@/app/lib/format";
+import { useToday } from "@/app/lib/useToday";
 
 // Below lg every card sits in one swipeable row; from lg up it's a fixed row of 3 (lg) or 4 (xl).
 const cardVisibility = (i: number) => (i < 3 ? "flex" : i === 3 ? "flex lg:hidden xl:flex" : "flex lg:hidden");
-
-const noopSubscribe = () => () => {};
-
-// "Today" only exists in the browser; the server render gets null so hydration matches.
-function useToday() {
-  return useSyncExternalStore(noopSubscribe, todayIso, () => null);
-}
 
 const categoryIcon: Record<SportCategory, LucideIcon> = {
   Football: SoccerBall,
@@ -115,21 +110,16 @@ export default function ScheduleSection() {
 
       {/* Cards: swipe row on phones/tablets (bleeds to the screen edge), one fixed row on desktop */}
       {filtered.length > 0 ? (
-        <>
-          <div className="-mx-4 mt-7 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pt-1 pb-3 [scrollbar-width:none] md:-mx-8 md:scroll-px-8 md:px-8 lg:mx-0 lg:snap-none lg:flex-wrap lg:justify-center lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden">
-            {filtered.map((s, i) => (
-              <ScheduleCard
-                key={s.id}
-                schedule={s}
-                community={communityById[s.communityId]}
-                className={cardVisibility(i)}
-              />
-            ))}
-          </div>
-          {filtered.length > 1 && (
-            <p className="mt-1 text-center text-xs text-slate-400 lg:hidden">Geser buat lihat jadwal lainnya →</p>
-          )}
-        </>
+        <SwipeRow hint="Geser buat lihat jadwal lainnya →" count={filtered.length}>
+          {filtered.map((s, i) => (
+            <ScheduleCard
+              key={s.id}
+              schedule={s}
+              community={communityById[s.communityId]}
+              className={cardVisibility(i)}
+            />
+          ))}
+        </SwipeRow>
       ) : (
         <EmptyState>Belum ada jadwal, nih.</EmptyState>
       )}
