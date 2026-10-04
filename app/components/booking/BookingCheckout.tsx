@@ -1,9 +1,10 @@
 "use client";
 
 import { useRef, useState, type FormEvent, type ReactNode } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/components/auth/AuthProvider";
 import BrandAvatar from "@/app/components/BrandAvatar";
+import { ErrorText, Field, InputShell } from "@/app/components/forms/Field";
 import {
   CalendarDays,
   Clock,
@@ -22,7 +23,6 @@ import type { Community, Schedule } from "@/app/data/schedules";
 import { formatDate, formatRupiah, todayIso } from "@/app/lib/format";
 import { formatPhone, isValidPhone, normalizePhone } from "@/app/lib/phone";
 import { findVoucher, priceBreakdown, type Position, type Voucher } from "@/app/lib/pricing";
-import type { User } from "@/app/lib/session";
 
 const SIZES = ["S", "M", "L", "XL", "XXL"] as const;
 type Size = (typeof SIZES)[number];
@@ -40,14 +40,12 @@ function newBookingId() {
 export default function BookingCheckout({
   schedule: s,
   community,
-  user,
   initialPosition,
   maxSlots,
   outfit,
 }: {
   schedule: Schedule;
   community: Community;
-  user: User | null;
   initialPosition: Position;
   maxSlots: number;
   outfit: "jersey" | "rompi";
@@ -55,9 +53,19 @@ export default function BookingCheckout({
   const router = useRouter();
   const nextSlotId = useRef(1);
 
-  const [name, setName] = useState(user?.name ?? "");
-  const [email, setEmail] = useState(user?.email ?? "");
-  const [phone, setPhone] = useState(user?.phone ?? "");
+  const { user, openAuth } = useAuth();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+
+  // When someone logs in (or arrives logged in), fill whatever they haven't typed yet.
+  const [prefilledFor, setPrefilledFor] = useState<string | null>(null);
+  if (user && prefilledFor !== user.email) {
+    setPrefilledFor(user.email);
+    setName((v) => v || user.name);
+    setEmail((v) => v || user.email);
+    setPhone((v) => v || user.phone);
+  }
   const [slots, setSlots] = useState<Slot[]>([{ id: 0, position: initialPosition, size: null }]);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -81,7 +89,7 @@ export default function BookingCheckout({
   const price = priceBreakdown(
     s,
     slots.map((slot) => slot.position),
-    { isMember: Boolean(user?.isMember), voucher },
+    { isMember: Boolean(user?.isMember), voucher: user ? voucher : null },
   );
 
   const updateSlot = (id: number, patch: Partial<Slot>) =>
@@ -296,9 +304,13 @@ export default function BookingCheckout({
             </p>
             {!user ? (
               <p className="mt-2 text-sm text-slate-500">
-                <Link href="/login" className="font-semibold text-blue-600 hover:underline">
+                <button
+                  type="button"
+                  onClick={() => openAuth("login")}
+                  className="font-semibold text-blue-600 hover:underline"
+                >
                   Masuk dulu
-                </Link>{" "}
+                </button>{" "}
                 buat pakai voucher dan dapet diskon member 10%.
               </p>
             ) : voucher ? (
@@ -365,7 +377,8 @@ export default function BookingCheckout({
               {price.memberDiscount > 0 && (
                 <Row label="Diskon member 10%" value={`− ${formatRupiah(price.memberDiscount)}`} positive />
               )}
-              {voucher &&
+              {user &&
+                voucher &&
                 (price.voucherBlocked ? (
                   <p className="text-xs text-amber-700">
                     Voucher {voucher.code} butuh minimal {voucher.minSlots} slot, tambahin slot dulu, ya.
@@ -422,58 +435,6 @@ function Panel({ title, subtitle, children }: { title: string; subtitle: string;
   );
 }
 
-function Field({
-  id,
-  label,
-  optional,
-  hint,
-  error,
-  className = "",
-  children,
-}: {
-  id: string;
-  label: string;
-  optional?: boolean;
-  hint?: string;
-  error?: string | false;
-  className?: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className={className}>
-      <label htmlFor={`field-${id}`} className="text-sm font-semibold text-slate-700">
-        {label}
-        {optional && <span className="ml-1 font-normal text-slate-400">(opsional)</span>}
-      </label>
-      <div className="mt-1.5">{children}</div>
-      {error ? (
-        <ErrorText id={`error-${id}`}>{error}</ErrorText>
-      ) : (
-        hint && (
-          <p id={`hint-${id}`} className="mt-1.5 text-xs text-slate-500">
-            {hint}
-          </p>
-        )
-      )}
-    </div>
-  );
-}
-
-function InputShell({ icon, invalid, children }: { icon: ReactNode; invalid: boolean; children: ReactNode }) {
-  return (
-    <div
-      className={`flex items-center gap-2.5 rounded-xl border bg-white px-3.5 text-slate-900 transition focus-within:ring-4 ${
-        invalid
-          ? "border-red-400 focus-within:ring-red-100"
-          : "border-slate-300 focus-within:border-blue-500 focus-within:ring-blue-100"
-      }`}
-    >
-      <span className="shrink-0 text-slate-400">{icon}</span>
-      {children}
-    </div>
-  );
-}
-
 // A real radio input (keyboard + screen readers) styled as a tile.
 function ChoiceTile({
   id,
@@ -505,14 +466,6 @@ function ChoiceTile({
         {children}
       </span>
     </label>
-  );
-}
-
-function ErrorText({ id, children }: { id: string; children: ReactNode }) {
-  return (
-    <p id={id} className="mt-1.5 text-xs text-red-600" aria-live="polite">
-      {children}
-    </p>
   );
 }
 

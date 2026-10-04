@@ -6,7 +6,6 @@ import ComingSoon from "@/app/components/ComingSoon";
 import { ArrowLeft } from "@/app/components/icons";
 import { communityById, getSchedule } from "@/app/data/schedules";
 import { formatDate } from "@/app/lib/format";
-import { getDemoUser } from "@/app/lib/session";
 
 const MAX_SLOTS_PER_BOOKING = 4;
 
@@ -60,7 +59,6 @@ export default async function BookingPage({ params, searchParams }: Props) {
           <BookingCheckout
             schedule={schedule}
             community={communityById[schedule.communityId]}
-            user={getDemoUser(query)}
             initialPosition={query.role === "gk" ? "GK" : "Player"}
             maxSlots={Math.min(MAX_SLOTS_PER_BOOKING, slotsLeft)}
             outfit={schedule.includes.includes("Rompi") ? "rompi" : "jersey"}
