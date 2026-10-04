@@ -7,6 +7,7 @@ export type Brand = {
 };
 
 const sizes = {
+  xs: "size-5 rounded-full text-[9px]",
   sm: "size-9 rounded-full text-xs",
   md: "size-12 rounded-full text-sm",
   lg: "size-16 rounded-full text-lg",

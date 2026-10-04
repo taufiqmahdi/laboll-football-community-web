@@ -9,21 +9,15 @@ import {
   YouTube,
   type LucideIcon,
 } from "@/app/components/icons";
+import { contact, whatsappLink } from "@/app/data/site";
 
-// Placeholder accounts and contact details: swap in the real ones.
+// Placeholder accounts: swap in the real ones (contact details live in app/data/site.ts).
 const socials: { label: string; href: string; Icon: LucideIcon }[] = [
   { label: "Instagram", href: "https://www.instagram.com/", Icon: Instagram },
   { label: "TikTok", href: "https://www.tiktok.com/", Icon: TikTok },
   { label: "YouTube", href: "https://www.youtube.com/", Icon: YouTube },
-  { label: "WhatsApp", href: "https://wa.me/6281200000000", Icon: MessageCircle },
+  { label: "WhatsApp", href: whatsappLink(), Icon: MessageCircle },
 ];
-
-const contact = {
-  email: "halo@laboll.id",
-  phone: "+62 812-0000-0000",
-  phoneHref: "tel:+6281200000000",
-  address: "Jl. Kemang Raya No. 10, Jakarta Selatan 12730",
-};
 
 export default function SiteFooter() {
   return (

@@ -25,6 +25,7 @@ import {
 import {
   communities,
   communityById,
+  featuredSchedules,
   schedules,
   sportCategories,
   type Community,
@@ -52,7 +53,7 @@ export default function ScheduleSection() {
   const [category, setCategory] = useState<SportCategory | "all">("all");
   const today = useToday();
 
-  const filtered = schedules.filter(
+  const filtered = featuredSchedules.filter(
     (s) => (!community || s.communityId === community) && (category === "all" || s.category === category),
   );
   const thisWeekCount = today ? schedules.filter((s) => isInSameWeek(s.date, today)).length : null;

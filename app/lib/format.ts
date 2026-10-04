@@ -36,6 +36,31 @@ export function daysBetween(from: string, to: string) {
   return Math.round((ms(to) - ms(from)) / 86_400_000);
 }
 
+const DAYS_SHORT = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+
+const parseUtc = (iso: string) => {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, d));
+};
+
+// "2026-10-04" + 3 -> "2026-10-07"
+export function addDays(iso: string, days: number) {
+  const date = parseUtc(iso);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+// Pieces for compact date tiles: { weekday: "Sen", day: 5, month: "Okt" }
+export function dateParts(iso: string) {
+  const date = parseUtc(iso);
+  return { weekday: DAYS_SHORT[date.getUTCDay()], day: date.getUTCDate(), month: MONTHS[date.getUTCMonth()] };
+}
+
+// Today in Jakarta, so server-rendered dates don't depend on the server's timezone.
+export function todayInJakarta() {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta" }).format(new Date());
+}
+
 export function todayIso() {
   return toIso(new Date());
 }
