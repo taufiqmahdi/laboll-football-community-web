@@ -2,9 +2,15 @@
 
 import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import CommunityAvatar from "@/app/components/CommunityAvatar";
+import BrandAvatar from "@/app/components/BrandAvatar";
 import {
-  ArrowRight,
+  EmptyState,
+  Section,
+  SectionHeading,
+  SeeAllLink,
+  SegmentedFilter,
+} from "@/app/components/SectionTemplate";
+import {
   CalendarDays,
   Check,
   Clock,
@@ -25,6 +31,9 @@ import {
   type SportCategory,
 } from "@/app/data/schedules";
 import { formatDate, formatRupiah, isInSameWeek, todayIso } from "@/app/lib/format";
+
+// Below lg every card sits in one swipeable row; from lg up it's a fixed row of 3 (lg) or 4 (xl).
+const cardVisibility = (i: number) => (i < 3 ? "flex" : i === 3 ? "flex lg:hidden xl:flex" : "flex lg:hidden");
 
 const noopSubscribe = () => () => {};
 
@@ -54,113 +63,92 @@ export default function ScheduleSection() {
   const thisWeekCount = today ? schedules.filter((s) => isInSameWeek(s.date, today)).length : null;
 
   return (
-    <section id="jadwal" className="w-full scroll-mt-26 bg-slate-50 py-12 md:py-16">
-      <div className="mx-auto max-w-7xl px-4 md:px-8">
-        {/* Heading */}
-        <div className="flex flex-col items-center text-center">
-          <div className="flex size-14 items-center justify-center rounded-full bg-blue-100 text-blue-600">
-            <CalendarDays className="size-7" />
-          </div>
-          <h2 className="mt-4 text-3xl font-bold text-slate-900 md:text-4xl">Yuk, Cari Jadwal Main!</h2>
-          <p className="mt-2 max-w-xl text-slate-600">
-            Pilih jadwal dari komunitas partner kita, amankan slotmu, terus tinggal dateng dan main bareng. Gampang,
-            kan?
-          </p>
-        </div>
+    <Section id="jadwal">
+      <SectionHeading
+        Icon={CalendarDays}
+        title="Yuk, Cari Jadwal Main!"
+        subtitle="Pilih jadwal dari komunitas partner kita, amankan slotmu, terus tinggal dateng dan main bareng. Gampang, kan?"
+      />
 
-        {/* Community picker (single choice, nothing picked = all communities) */}
-        <div className="mt-10 text-center">
-          <p className="mb-4 text-sm font-semibold text-slate-500">Mau main bareng komunitas mana?</p>
-          <div
-            role="radiogroup"
-            aria-label="Pilih komunitas"
-            className="flex flex-wrap justify-center gap-x-4 gap-y-5 sm:gap-x-8"
-          >
-            {communities.map((c) => (
-              <CommunityOption
-                key={c.id}
-                community={c}
-                checked={community === c.id}
-                dimmed={community !== null && community !== c.id}
-                onSelect={() => setCommunity(community === c.id ? null : c.id)}
+      {/* Community picker (single choice, nothing picked = all communities) */}
+      <div className="mt-10 text-center">
+        <p className="mb-4 text-sm font-semibold text-slate-500">Mau main bareng komunitas mana?</p>
+        <div
+          role="radiogroup"
+          aria-label="Pilih komunitas"
+          className="flex flex-wrap justify-center gap-x-4 gap-y-5 sm:gap-x-8"
+        >
+          {communities.map((c) => (
+            <CommunityOption
+              key={c.id}
+              community={c}
+              checked={community === c.id}
+              dimmed={community !== null && community !== c.id}
+              onSelect={() => setCommunity(community === c.id ? null : c.id)}
+            />
+          ))}
+        </div>
+        <p className="mt-4 h-5 text-sm text-slate-500">
+          {community ? (
+            <>
+              Lagi lihat jadwal <span className="font-semibold text-slate-700">{communityById[community].name}</span>{" "}
+              ·{" "}
+              <button
+                type="button"
+                onClick={() => setCommunity(null)}
+                className="font-semibold text-blue-600 hover:underline"
+              >
+                Lihat semua aja
+              </button>
+            </>
+          ) : (
+            "Lagi nampilin jadwal dari semua komunitas"
+          )}
+        </p>
+      </div>
+
+      {/* Category filter */}
+      <div className="mt-6 text-center">
+        <p className="mb-3 text-sm font-semibold text-slate-500">Mau main apa hari ini?</p>
+        <SegmentedFilter options={categoryOptions} value={category} onChange={setCategory} />
+      </div>
+
+      {/* Cards: swipe row on phones/tablets (bleeds to the screen edge), one fixed row on desktop */}
+      {filtered.length > 0 ? (
+        <>
+          <div className="-mx-4 mt-7 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pt-1 pb-3 [scrollbar-width:none] md:-mx-8 md:scroll-px-8 md:px-8 lg:mx-0 lg:snap-none lg:flex-wrap lg:justify-center lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden">
+            {filtered.map((s, i) => (
+              <ScheduleCard
+                key={s.id}
+                schedule={s}
+                community={communityById[s.communityId]}
+                className={cardVisibility(i)}
               />
             ))}
           </div>
-          <p className="mt-4 h-5 text-sm text-slate-500">
-            {community ? (
-              <>
-                Lagi lihat jadwal <span className="font-semibold text-slate-700">{communityById[community].name}</span>{" "}
-                ·{" "}
-                <button
-                  type="button"
-                  onClick={() => setCommunity(null)}
-                  className="font-semibold text-blue-600 hover:underline"
-                >
-                  Lihat semua aja
-                </button>
-              </>
-            ) : (
-              "Lagi nampilin jadwal dari semua komunitas"
-            )}
-          </p>
-        </div>
+          {filtered.length > 1 && (
+            <p className="mt-1 text-center text-xs text-slate-400 lg:hidden">Geser buat lihat jadwal lainnya →</p>
+          )}
+        </>
+      ) : (
+        <EmptyState>Belum ada jadwal, nih.</EmptyState>
+      )}
 
-        {/* Category filter */}
-        <div className="mt-6 text-center">
-          <p className="mb-3 text-sm font-semibold text-slate-500">Mau main apa hari ini?</p>
-          <div className="inline-flex rounded-full bg-white p-1 shadow-sm ring-1 ring-slate-200">
-            {categoryOptions.map(({ value, label, Icon }) => (
-              <button
-                key={value}
-                type="button"
-                aria-pressed={category === value}
-                onClick={() => setCategory(value)}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold transition sm:px-5 ${
-                  category === value ? "bg-blue-500 text-white" : "text-slate-600 hover:text-blue-600"
-                }`}
-              >
-                <Icon className="size-4" />
-                {label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Cards */}
-        {filtered.length > 0 ? (
-          <div className="mt-8 flex flex-wrap justify-center gap-6">
-            {filtered.map((s) => (
-              <ScheduleCard key={s.id} schedule={s} community={communityById[s.communityId]} />
-            ))}
-          </div>
-        ) : (
-          <div className="mt-8 rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center text-slate-500">
-            Belum ada jadwal, nih.
-          </div>
-        )}
-
-        {/* See all */}
-        <div className="mt-12 flex flex-col items-center gap-3">
-          <Link
-            href="/schedule"
-            className="flex w-full max-w-md items-center justify-center gap-2 rounded-full bg-blue-500 px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-600"
-          >
-            Lihat Semua Jadwal
-            <ArrowRight className="size-5" />
-          </Link>
-          <p className="h-5 text-sm text-slate-600">
-            {thisWeekCount === null ? null : thisWeekCount > 0 ? (
-              <>
-                Minggu ini ada <span className="font-bold text-blue-600">{thisWeekCount} jadwal</span> seru yang bisa
-                kamu ikutin!
-              </>
-            ) : (
-              "Minggu ini belum ada jadwal, nih. Cek lagi nanti, ya!"
-            )}
-          </p>
-        </div>
-      </div>
-    </section>
+      <SeeAllLink
+        href="/schedule"
+        label="Lihat Semua Jadwal"
+        note={
+          thisWeekCount === null ? null : thisWeekCount > 0 ? (
+            <>
+              Minggu ini ada <span className="font-bold text-blue-600">{thisWeekCount} jadwal</span> seru yang bisa
+              kamu ikutin!
+            </>
+          ) : (
+            "Minggu ini belum ada jadwal, nih. Cek lagi nanti, ya!"
+          )
+        }
+      />
+    </Section>
   );
 }
 
@@ -189,7 +177,7 @@ function CommunityOption({
           checked ? "ring-4 ring-blue-500 ring-offset-3 ring-offset-slate-50" : ""
         }`}
       >
-        <CommunityAvatar community={community} size="lg" />
+        <BrandAvatar brand={community} size="lg" />
         {checked && (
           <span className="absolute -right-1 -bottom-1 flex size-6 items-center justify-center rounded-full border-2 border-slate-50 bg-blue-500 text-white">
             <Check className="size-3" strokeWidth={3} />
@@ -205,14 +193,24 @@ function CommunityOption({
   );
 }
 
-function ScheduleCard({ schedule: s, community }: { schedule: Schedule; community: Community }) {
+function ScheduleCard({
+  schedule: s,
+  community,
+  className,
+}: {
+  schedule: Schedule;
+  community: Community;
+  className: string;
+}) {
   const percent = Math.round((s.slotsFilled / s.slotsTotal) * 100);
   const isFull = s.slotsFilled >= s.slotsTotal;
   const almostFull = !isFull && percent >= 80;
   const CategoryIcon = categoryIcon[s.category];
 
   return (
-    <article className="flex w-full flex-col overflow-hidden sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition hover:shadow-md">
+    <article
+      className={`w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition hover:shadow-md sm:w-[45%] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] ${className}`}
+    >
       {/* Thumbnail with schedule info */}
       <div className="relative h-52">
         <img src={s.image} alt={`${community.name} ${s.category}`} className="absolute inset-0 size-full object-cover" />
@@ -252,7 +250,7 @@ function ScheduleCard({ schedule: s, community }: { schedule: Schedule; communit
       <div className="flex flex-1 flex-col gap-4 p-4">
         {/* Community */}
         <div className="flex items-center gap-3">
-          <CommunityAvatar community={community} />
+          <BrandAvatar brand={community} />
           <div>
             <p className="font-bold text-slate-900">{community.name}</p>
             <p className="text-xs text-slate-500">Partner komunitas kita</p>

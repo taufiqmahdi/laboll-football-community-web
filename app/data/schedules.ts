@@ -1,12 +1,8 @@
 export type SportCategory = "Football" | "Mini Soccer";
 
-export type Community = {
-  id: string;
-  name: string;
-  initials: string;
-  color: string; // Tailwind bg class for the initials fallback
-  logo?: string;
-};
+import type { Brand } from "@/app/components/BrandAvatar";
+
+export type Community = Brand & { id: string };
 
 export type Schedule = {
   id: string;

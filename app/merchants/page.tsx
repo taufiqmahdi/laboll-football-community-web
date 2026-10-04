@@ -5,6 +5,8 @@ export default function MerchantsPage() {
     <ComingSoon
       title="Kenalan sama merchant partner kita"
       message="Dari kuliner sampai konveksi jersey, merchant yang dukung komunitas bakal nongol di sini. Tungguin, ya!"
+      backHref="/#merchant"
+      backLabel="Balik ke merchant"
     />
   );
 }

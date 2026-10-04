@@ -7,10 +7,14 @@ export default function ComingSoon({
   title,
   message,
   children,
+  backHref = "/#jadwal",
+  backLabel = "Balik ke jadwal",
 }: {
   title: string;
   message: string;
   children?: ReactNode;
+  backHref?: string;
+  backLabel?: string;
 }) {
   return (
     <main className="flex w-full flex-1 items-center justify-center bg-slate-50 px-4 py-20">
@@ -22,10 +26,10 @@ export default function ComingSoon({
         <p className="mt-2 text-slate-600">{message}</p>
         {children}
         <Link
-          href="/#jadwal"
+          href={backHref}
           className="mt-8 inline-block rounded-full bg-blue-500 px-6 py-3 font-semibold text-white transition hover:bg-blue-600"
         >
-          Balik ke jadwal
+          {backLabel}
         </Link>
       </div>
     </main>

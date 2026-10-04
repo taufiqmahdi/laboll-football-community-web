@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { CalendarDays, ReceiptText, SoccerBall } from "@/app/components/icons";
+import MerchandiseSection from "@/app/components/MerchandiseSection";
+import MerchantSection from "@/app/components/MerchantSection";
 import ScheduleSection from "@/app/components/ScheduleSection";
 
 export default function Home() {
@@ -52,6 +54,8 @@ export default function Home() {
       </section>
 
       <ScheduleSection />
+      <MerchantSection />
+      <MerchandiseSection />
     </main>
   );
 }
