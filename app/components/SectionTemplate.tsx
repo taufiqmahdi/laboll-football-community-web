@@ -108,6 +108,35 @@ export function SegmentedFilter<T extends string>({
   );
 }
 
+// Toggle pill for multi-option filter rows (wraps freely, unlike SegmentedFilter).
+export function FilterPill({
+  active,
+  onClick,
+  icon,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  icon: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold whitespace-nowrap ring-1 transition [&_svg]:size-4 ${
+        active
+          ? "bg-blue-500 text-white ring-blue-500"
+          : "bg-white text-slate-600 ring-slate-200 hover:text-blue-600 hover:ring-blue-300"
+      }`}
+    >
+      {icon}
+      {children}
+    </button>
+  );
+}
+
 // Phones/tablets: one swipeable row that bleeds to the screen edge (cards should be `shrink-0 snap-start`).
 // Desktop (lg+): a normal centered row; the section decides which cards stay visible there.
 export function SwipeRow({ hint, count, children }: { hint: string; count: number; children: ReactNode }) {

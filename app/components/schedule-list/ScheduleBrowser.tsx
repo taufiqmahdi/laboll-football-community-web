@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { SegmentedFilter } from "@/app/components/SectionTemplate";
+import { FilterPill, SegmentedFilter } from "@/app/components/SectionTemplate";
 import ScheduleListCard from "@/app/components/schedule-list/ScheduleListCard";
 import {
   CalendarDays,
@@ -87,29 +87,29 @@ export default function ScheduleBrowser({ today, initialFilters }: { today: stri
       <section className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-5">
         <div className="flex flex-col gap-5 lg:flex-row lg:flex-wrap lg:items-end lg:gap-x-10">
           <FilterGroup label="Kategori">
-            <Pill active={filters.category === "all"} onClick={() => set({ category: "all" })} icon={<LayoutGrid />}>
+            <FilterPill active={filters.category === "all"} onClick={() => set({ category: "all" })} icon={<LayoutGrid />}>
               Semua
-            </Pill>
+            </FilterPill>
             {sportCategories.map((c) => (
-              <Pill
+              <FilterPill
                 key={c}
                 active={filters.category === c}
                 onClick={() => set({ category: c })}
                 icon={c === "Football" ? <SoccerBall /> : <SoccerGoal />}
               >
                 {c}
-              </Pill>
+              </FilterPill>
             ))}
           </FilterGroup>
 
           <FilterGroup label="Jenis main">
-            <Pill active={filters.activity === "all"} onClick={() => set({ activity: "all" })} icon={<LayoutGrid />}>
+            <FilterPill active={filters.activity === "all"} onClick={() => set({ activity: "all" })} icon={<LayoutGrid />}>
               Semua
-            </Pill>
+            </FilterPill>
             {activities.map((a) => (
-              <Pill key={a} active={filters.activity === a} onClick={() => set({ activity: a })} icon={<Swords />}>
+              <FilterPill key={a} active={filters.activity === a} onClick={() => set({ activity: a })} icon={<Swords />}>
                 {a}
-              </Pill>
+              </FilterPill>
             ))}
           </FilterGroup>
 
@@ -242,34 +242,6 @@ function FilterGroup({ label, children }: { label: string; children: ReactNode }
       <p className="mb-2 text-xs font-semibold tracking-wide text-slate-500 uppercase">{label}</p>
       <div className="flex flex-wrap gap-2">{children}</div>
     </div>
-  );
-}
-
-function Pill({
-  active,
-  onClick,
-  icon,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  icon: ReactNode;
-  children: ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold ring-1 transition [&_svg]:size-4 ${
-        active
-          ? "bg-blue-500 text-white ring-blue-500"
-          : "bg-white text-slate-600 ring-slate-200 hover:text-blue-600 hover:ring-blue-300"
-      }`}
-    >
-      {icon}
-      {children}
-    </button>
   );
 }
 

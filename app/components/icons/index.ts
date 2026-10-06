@@ -52,6 +52,7 @@ export {
   RotateCcw,
   Search,
   SearchX,
+  Share2,
   ShieldCheck,
   Shirt,
   ShoppingBag,

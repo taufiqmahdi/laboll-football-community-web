@@ -16,6 +16,24 @@ export function formatRupiah(amount: number) {
   return `Rp ${amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
 }
 
+const MONTHS_LONG = [
+  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+  "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+];
+
+// "Sabtu, 3 Oktober 2026"
+export function formatDateLong(iso: string) {
+  const [y, m, d] = iso.split("-").map(Number);
+  const day = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  return `${DAYS[day]}, ${d} ${MONTHS_LONG[m - 1]} ${y}`;
+}
+
+// 958 -> "958", 1840 -> "1,8 rb", 12500 -> "12,5 rb"
+export function formatCount(n: number) {
+  if (n < 1000) return String(n);
+  return `${String(Math.round(n / 100) / 10).replace(".", ",")} rb`;
+}
+
 // "24 Okt"
 export function formatDayMonth(iso: string) {
   const [, m, d] = iso.split("-").map(Number);
