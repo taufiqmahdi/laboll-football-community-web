@@ -18,6 +18,7 @@ export {
   CircleX,
   Clock,
   Coffee,
+  Copy,
   Crown,
   DoorOpen,
   Dumbbell,

@@ -11,6 +11,8 @@ const sizes = {
   sm: "size-9 rounded-full text-xs",
   md: "size-12 rounded-full text-sm",
   lg: "size-16 rounded-full text-lg",
+  xl: "size-16 rounded-full text-lg sm:size-20 sm:text-xl",
+  "2xl": "size-24 rounded-full text-2xl sm:size-28 sm:text-3xl",
   box: "aspect-square w-full rounded-lg text-xl sm:text-2xl", // fills its container
 };
 

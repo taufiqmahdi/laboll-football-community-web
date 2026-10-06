@@ -11,30 +11,16 @@ import {
   showFrom,
   type Breakpoint,
 } from "@/app/components/SectionTemplate";
-import {
-  Coffee,
-  Handshake,
-  LandPlot,
-  LayoutGrid,
-  Shirt,
-  UtensilsCrossed,
-  type LucideIcon,
-} from "@/app/components/icons";
+import { merchantCategoryIcon } from "@/app/components/merchants/categoryIcon";
+import { Handshake, LayoutGrid, type LucideIcon } from "@/app/components/icons";
 import { merchantCategories, merchants, type Merchant, type MerchantCategory } from "@/app/data/merchants";
-
-const categoryIcon: Record<MerchantCategory, LucideIcon> = {
-  Makanan: UtensilsCrossed,
-  Minuman: Coffee,
-  "Sport Center": LandPlot,
-  Apparel: Shirt,
-};
 
 // One row: 3 on phones, 4 on tablets, 6 on desktop.
 const ROW: Breakpoint[] = ["base", "base", "base", "sm", "lg", "lg"];
 
 const categoryOptions: { value: MerchantCategory | "all"; label: string; Icon: LucideIcon }[] = [
   { value: "all", label: "Semua", Icon: LayoutGrid },
-  ...merchantCategories.map((c) => ({ value: c, label: c, Icon: categoryIcon[c] })),
+  ...merchantCategories.map((c) => ({ value: c, label: c, Icon: merchantCategoryIcon[c] })),
 ];
 
 export default function MerchantSection() {

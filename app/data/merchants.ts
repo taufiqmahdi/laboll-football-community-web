@@ -7,7 +7,10 @@ export type Merchant = Brand & {
   category: MerchantCategory;
   image: string;
   description: string;
-  location: string;
+  location: string; // area, e.g. "Kemang, Jakarta Selatan"
+  address: string; // street address, also used for the maps search
+  phone: string; // national digits without the leading 0, like app/lib/phone.ts
+  instagram?: string; // handle without "@"
   perk: string; // member promo
   highlights: string[];
 };
@@ -27,6 +30,9 @@ export const merchants: Merchant[] = [
     image: pexels(70497),
     description: "Burger, rice bowl, sama kentang goreng porsi kuli. Pas banget buat isi tenaga habis main.",
     location: "Kemang, Jakarta Selatan",
+    address: "Jl. Kemang Raya No. 21, Bangka, Mampang Prapatan, Jakarta Selatan",
+    phone: "81210002101",
+    instagram: "dapurkickoff",
     perk: "Diskon 15% buat member",
     highlights: ["Bisa antar ke lapangan", "Paket tim"],
   },
@@ -40,6 +46,9 @@ export const merchants: Merchant[] = [
     image: pexels(302899),
     description: "Kopi susu, es teh, sampai jus segar. Tempat nongkrong favorit sebelum dan sesudah game.",
     location: "Senayan, Jakarta Pusat",
+    address: "Jl. Asia Afrika No. 8, Gelora, Tanah Abang, Jakarta Pusat",
+    phone: "81210002102",
+    instagram: "kopikiper",
     perk: "Gratis 1 es teh tiap beli 2 kopi",
     highlights: ["Buka sampai malam", "Ada colokan"],
   },
@@ -52,6 +61,9 @@ export const merchants: Merchant[] = [
     image: pexels(1884576),
     description: "Lapangan football rumput asli ukuran standar, lengkap sama tribun dan ruang ganti.",
     location: "Simprug, Jakarta Selatan",
+    address: "Jl. Teuku Nyak Arief No. 15, Simprug, Kebayoran Lama, Jakarta Selatan",
+    phone: "81210002103",
+    instagram: "arenahijau.sc",
     perk: "Diskon 10% sewa lapangan",
     highlights: ["Ruang ganti", "Parkir luas", "Lampu malam"],
   },
@@ -64,6 +76,9 @@ export const merchants: Merchant[] = [
     image: pexels(1907244),
     description: "Bakmi kuah dan goreng yang anget dan ngenyangin. Cocok buat makan bareng satu tim.",
     location: "Kuningan, Jakarta Selatan",
+    address: "Jl. Prof. Dr. Satrio No. 32, Karet Kuningan, Setiabudi, Jakarta Selatan",
+    phone: "81210002104",
+    instagram: "bakmibabakkedua",
     perk: "Gratis es teh buat member",
     highlights: ["Porsi jumbo", "Muat rombongan"],
   },
@@ -76,6 +91,9 @@ export const merchants: Merchant[] = [
     image: pexels(1171084),
     description: "Lapangan mini soccer rumput sintetis yang empuk, ada kafe kecil buat yang nunggu giliran.",
     location: "Kemang, Jakarta Selatan",
+    address: "Jl. Kemang Selatan No. 99, Bangka, Mampang Prapatan, Jakarta Selatan",
+    phone: "81210002105",
+    instagram: "garisgawang.minisoccer",
     perk: "Gratis 1 jam tiap booking 5 jam",
     highlights: ["Rumput sintetis", "Kafe", "Mushola"],
   },
@@ -89,6 +107,9 @@ export const merchants: Merchant[] = [
     image: pexels(996329),
     description: "Bikin jersey tim custom, dari desain sampai sablon nama dan nomor punggung. Bisa satuan juga.",
     location: "Tanah Abang, Jakarta Pusat",
+    address: "Pasar Tanah Abang Blok B Lt. 3 No. 17, Tanah Abang, Jakarta Pusat",
+    phone: "81210002106",
+    instagram: "jerseyjuara",
     perk: "Diskon 20% pesanan jersey tim",
     highlights: ["Free desain", "Minimal 1 pcs"],
   },
@@ -101,6 +122,9 @@ export const merchants: Merchant[] = [
     image: pexels(1279330),
     description: "Pasta dan salad buat yang mau tetap fit tapi kenyang. Porsinya pas buat habis lari-lari.",
     location: "Senopati, Jakarta Selatan",
+    address: "Jl. Senopati No. 45, Selong, Kebayoran Baru, Jakarta Selatan",
+    phone: "81210002107",
+    instagram: "pastapinalti",
     perk: "Diskon 10% buat member",
     highlights: ["Menu sehat", "Bisa take away"],
   },
@@ -113,6 +137,8 @@ export const merchants: Merchant[] = [
     image: pexels(1233319),
     description: "Jus buah segar dan infused water, pas buat balikin tenaga habis main.",
     location: "Kemang, Jakarta Selatan",
+    address: "Jl. Kemang Raya No. 58, Bangka, Mampang Prapatan, Jakarta Selatan",
+    phone: "81210002108",
     perk: "Upsize gratis buat member",
     highlights: ["Tanpa gula tambahan", "Antar ke lapangan"],
   },
@@ -125,6 +151,9 @@ export const merchants: Merchant[] = [
     image: pexels(2638019),
     description: "Es teh jumbo dan kopi susu gula aren yang selalu nangkring di pinggir lapangan.",
     location: "Kuningan, Jakarta Selatan",
+    address: "Jl. H.R. Rasuna Said Kav. 12, Kuningan, Setiabudi, Jakarta Selatan",
+    phone: "81210002109",
+    instagram: "esteh.tendang",
     perk: "Beli 5 gratis 1",
     highlights: ["Ukuran jumbo", "Harga bersahabat"],
   },
@@ -137,6 +166,9 @@ export const merchants: Merchant[] = [
     image: pexels(3621104),
     description: "Tiga lapangan mini soccer berdampingan, cocok buat turnamen kecil antar komunitas.",
     location: "Cilandak, Jakarta Selatan",
+    address: "Jl. Cilandak KKO No. 7, Ragunan, Pasar Minggu, Jakarta Selatan",
+    phone: "81210002110",
+    instagram: "merdekafootballpark",
     perk: "Diskon 15% booking pagi",
     highlights: ["3 lapangan", "Shower air panas"],
   },
@@ -149,6 +181,9 @@ export const merchants: Merchant[] = [
     image: pexels(8148577),
     description: "Sablon nama, nomor, dan logo sponsor di jersey. Bisa ditunggu buat pesanan kecil.",
     location: "Tebet, Jakarta Selatan",
+    address: "Jl. Tebet Raya No. 64, Tebet Barat, Tebet, Jakarta Selatan",
+    phone: "81210002111",
+    instagram: "sablonstriker",
     perk: "Gratis sablon nama buat member",
     highlights: ["Bisa ditunggu", "Sablon polyflex"],
   },
@@ -161,10 +196,16 @@ export const merchants: Merchant[] = [
     image: pexels(4066293),
     description: "Kaos kaki grip, deker, sampai tas sepatu. Perlengkapan kecil yang sering lupa dibawa.",
     location: "Blok M, Jakarta Selatan",
+    address: "Blok M Square Lt. 2 No. 28, Melawai, Kebayoran Baru, Jakarta Selatan",
+    phone: "81210002112",
+    instagram: "kaptensportswear",
     perk: "Diskon 15% semua aksesoris",
     highlights: ["Kaos kaki grip", "Deker"],
   },
 ];
+
+export const merchantMapsLink = (m: Merchant) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${m.name}, ${m.address}`)}`;
 
 export function getMerchant(id: string) {
   return merchants.find((m) => m.id === id);
