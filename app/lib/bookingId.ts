@@ -3,6 +3,8 @@
 //   YYMMDD  booking date
 //   XXXX    4-character code (letters/numbers)
 
+import { todayIso } from "@/app/lib/format";
+
 export const BOOKING_ID_EXAMPLE = "LBL-261004-Q9M5";
 
 const PREFIX = "LBL";
@@ -71,4 +73,12 @@ export function checkBookingId(formatted: string): BookingIdCheck {
     return { status: "valid", message: "Format udah pas, tinggal cek!", checks };
   }
   return { status: "typing", message: `Lanjutin dulu, formatnya ${BOOKING_ID_EXAMPLE}`, checks };
+}
+
+// A fresh ID for a new booking or registration, dated today.
+export function newBookingId() {
+  const date = todayIso().slice(2).replace(/-/g, "");
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const code = Array.from({ length: 4 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join("");
+  return `LBL-${date}-${code}`;
 }

@@ -50,7 +50,7 @@ const venueIcons: Record<VenueFacility, LucideIcon> = {
   Tribun: Armchair,
 };
 
-function Card({ title, icon, children }: { title: string; icon: ReactNode; children: ReactNode }) {
+export function Card({ title, icon, children }: { title: string; icon: ReactNode; children: ReactNode }) {
   return (
     <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
       <h2 className="flex items-center gap-2 font-bold text-slate-900">

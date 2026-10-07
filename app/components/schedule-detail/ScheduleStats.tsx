@@ -47,19 +47,22 @@ export default function ScheduleStats({
   );
 }
 
-function Stat({
+// `stacked` puts the icon above the text below lg, for values too long to sit beside it in a narrow cell.
+export function Stat({
   icon,
   label,
   iconless,
+  stacked,
   children,
 }: {
   icon: ReactNode;
   label: string;
   iconless?: boolean;
+  stacked?: boolean;
   children: ReactNode;
 }) {
   return (
-    <div className={`flex min-w-0 gap-3 bg-white p-4 ${iconless ? "items-center" : ""}`}>
+    <div className={`flex min-w-0 gap-3 bg-white p-4 ${iconless ? "items-center" : ""} ${stacked ? "flex-col lg:flex-row" : ""}`}>
       <div
         className={
           iconless ? "shrink-0" : "flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600"

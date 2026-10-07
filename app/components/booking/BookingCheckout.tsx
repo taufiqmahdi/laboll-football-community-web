@@ -4,6 +4,7 @@ import { useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/components/auth/AuthProvider";
 import BrandAvatar from "@/app/components/BrandAvatar";
+import ChoiceTile from "@/app/components/forms/ChoiceTile";
 import { ErrorText, Field, InputShell } from "@/app/components/forms/Field";
 import {
   CalendarDays,
@@ -20,7 +21,8 @@ import {
   X,
 } from "@/app/components/icons";
 import type { Community, Schedule } from "@/app/data/schedules";
-import { formatDate, formatRupiah, todayIso } from "@/app/lib/format";
+import { newBookingId } from "@/app/lib/bookingId";
+import { formatDate, formatRupiah } from "@/app/lib/format";
 import { formatPhone, isValidPhone, normalizePhone } from "@/app/lib/phone";
 import { findVoucher, priceBreakdown, type Position, type Voucher } from "@/app/lib/pricing";
 
@@ -29,13 +31,6 @@ type Size = (typeof SIZES)[number];
 type Slot = { id: number; position: Position; size: Size | null };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function newBookingId() {
-  const date = todayIso().slice(2).replace(/-/g, "");
-  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  const code = Array.from({ length: 4 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join("");
-  return `LBL-${date}-${code}`;
-}
 
 export default function BookingCheckout({
   schedule: s,
@@ -432,40 +427,6 @@ function Panel({ title, subtitle, children }: { title: string; subtitle: string;
       <p className="mt-0.5 text-sm text-slate-500">{subtitle}</p>
       <div className="mt-5">{children}</div>
     </section>
-  );
-}
-
-// A real radio input (keyboard + screen readers) styled as a tile.
-function ChoiceTile({
-  id,
-  name,
-  checked,
-  onChange,
-  compact,
-  children,
-}: {
-  id?: string;
-  name: string;
-  checked: boolean;
-  onChange: () => void;
-  compact?: boolean;
-  children: ReactNode;
-}) {
-  return (
-    <label className="cursor-pointer">
-      <input id={id} type="radio" name={name} checked={checked} onChange={onChange} className="peer sr-only" />
-      <span
-        className={`flex flex-col items-center justify-center rounded-xl border text-sm transition peer-focus-visible:ring-4 peer-focus-visible:ring-blue-100 ${
-          compact ? "px-1 py-2 font-semibold sm:min-w-12 sm:px-3" : "px-3 py-2.5"
-        } ${
-          checked
-            ? "border-blue-500 bg-blue-500 text-white"
-            : "border-slate-300 bg-white text-slate-700 hover:border-blue-300"
-        }`}
-      >
-        {children}
-      </span>
-    </label>
   );
 }
 

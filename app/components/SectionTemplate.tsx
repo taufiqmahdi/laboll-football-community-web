@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ArrowRight, type LucideIcon } from "@/app/components/icons";
+import { ArrowRight, ChevronDown, type LucideIcon } from "@/app/components/icons";
 
 // Shared layout for homepage sections: icon + title + subtitle, content, then a big "see all" button.
 
@@ -105,6 +105,39 @@ export function SegmentedFilter<T extends string>({
         </button>
       ))}
     </div>
+  );
+}
+
+// Labelled dropdown styled to sit next to a SegmentedFilter (same 44px height).
+export function PillSelect<T extends string>({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  options: { value: T; label: string }[];
+  value: T;
+  onChange: (value: T) => void;
+}) {
+  return (
+    <label className="flex shrink-0 items-center gap-2 text-sm text-slate-600">
+      <span className="shrink-0 font-semibold">{label}</span>
+      <span className="relative flex-1 sm:flex-none">
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value as T)}
+          className="h-11 w-full cursor-pointer appearance-none rounded-full bg-white pr-10 pl-4 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-slate-200 transition outline-none hover:ring-blue-300 focus-visible:ring-2 focus-visible:ring-blue-500"
+        >
+          {options.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-slate-400" />
+      </span>
+    </label>
   );
 }
 
