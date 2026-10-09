@@ -22,6 +22,7 @@ export {
   Crown,
   DoorOpen,
   Dumbbell,
+  ExternalLink,
   Eye,
   EyeOff,
   Flag,
