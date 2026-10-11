@@ -22,8 +22,8 @@ import {
   X,
 } from "@/app/components/icons";
 import { totalPrize, type Tournament } from "@/app/data/tournaments";
-import { newBookingId } from "@/app/lib/bookingId";
 import { formatDate, formatDayMonth, formatJuta, formatRupiah } from "@/app/lib/format";
+import { createOrder } from "@/app/lib/orders";
 import { formatPhone, isValidPhone, normalizePhone } from "@/app/lib/phone";
 import { countdownLabel, registrationState } from "@/app/lib/tournamentStatus";
 import { useToday } from "@/app/lib/useToday";
@@ -124,7 +124,18 @@ export default function TournamentRegistration({
     }
     setLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 800)); // pretend to create the registration
-    router.push(`/payment?booking=${newBookingId()}`);
+    const order = createOrder({
+      kind: "turnamen",
+      account: user?.email, // logged-in bookings show up in the account history
+      refId: t.id,
+      title: `${t.name} ${t.edition}`,
+      subtitle: `Tim ${trimmedTeam} · ${formatDayMonth(t.startDate)} – ${formatDayMonth(t.endDate)}`,
+      location: t.location,
+      contact: { name: name.trim(), phone },
+      lines: [{ label: "Biaya pendaftaran tim", amount: t.entryFee }],
+      total: t.entryFee,
+    });
+    router.push(`/payment?booking=${order.id}`);
   };
 
   const slotsLeft = t.teamsTotal - t.teamsRegistered;

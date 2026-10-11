@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import Link from "next/link";
 import { useAuth } from "@/app/components/auth/AuthProvider";
 import ChoiceTile from "@/app/components/forms/ChoiceTile";
 import { ErrorText, Field, InputShell } from "@/app/components/forms/Field";
@@ -103,6 +104,16 @@ export default function ProductPurchase({ product: p, detail }: { product: Produ
                   >
                     Masuk
                   </button>
+                </span>
+              )}
+              {user && (
+                <span className="flex items-center gap-1.5 whitespace-nowrap">
+                  <span aria-hidden className="text-slate-300">
+                    ·
+                  </span>
+                  <Link href="/member" className="font-semibold text-blue-600 underline-offset-2 hover:underline">
+                    Gabung member
+                  </Link>
                 </span>
               )}
             </p>

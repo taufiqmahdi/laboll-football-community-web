@@ -16,12 +16,12 @@ import {
   SearchX,
   type LucideIcon,
 } from "@/app/components/icons";
-import { findBooking, type Booking } from "@/app/data/bookings";
-import { communityById, getSchedule } from "@/app/data/schedules";
 import { BOOKING_ID_EXAMPLE, checkBookingId, formatBookingId, type CheckState } from "@/app/lib/bookingId";
-import { formatDate, formatRupiah } from "@/app/lib/format";
+import { formatRupiah, formatTimestamp } from "@/app/lib/format";
+import { orderCopy } from "@/app/lib/orderCopy";
+import { findOrder, getMethod, orderStatus, type Order } from "@/app/lib/orders";
 
-type Result = { kind: "found"; booking: Booking } | { kind: "not-found"; id: string };
+type Result = { kind: "found"; order: Order; checkedAt: number } | { kind: "not-found"; id: string };
 
 const checkIcon: Record<CheckState, { Icon: LucideIcon; className: string }> = {
   pending: { Icon: Circle, className: "text-slate-300" },
@@ -51,10 +51,10 @@ export default function PaymentCheckSection() {
     if (!isValid || loading) return;
     const current = ++requestId.current;
     setLoading(true);
-    const booking = await findBooking(value);
+    const order = await findOrder(value);
     if (current !== requestId.current) return;
     setLoading(false);
-    setResult(booking ? { kind: "found", booking } : { kind: "not-found", id: value });
+    setResult(order ? { kind: "found", order, checkedAt: Date.now() } : { kind: "not-found", id: value });
   };
 
   return (
@@ -168,70 +168,69 @@ function ResultCard({ result }: { result: Result }) {
     );
   }
 
-  const b = result.booking;
-  const schedule = getSchedule(b.scheduleId);
-  const community = schedule ? communityById[schedule.communityId] : null;
+  const o = result.order;
+  const status = orderStatus(o, result.checkedAt);
+  const copy = orderCopy(o);
 
   const details = (
     <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
       <dt className="text-slate-500">Booking ID</dt>
-      <dd className="font-mono font-semibold text-slate-900">{b.id}</dd>
+      <dd className="font-mono font-semibold text-slate-900">{o.id}</dd>
       <dt className="text-slate-500">Nama</dt>
+      <dd className="text-slate-900">{o.contact.name}</dd>
+      <dt className="text-slate-500">{copy.short}</dt>
       <dd className="text-slate-900">
-        {b.playerName} · {b.role}
+        {o.title}
+        <span className="block text-slate-500">{o.subtitle}</span>
       </dd>
-      {schedule && community && (
+      {o.location && (
         <>
-          <dt className="text-slate-500">Jadwal</dt>
-          <dd className="text-slate-900">
-            {community.name} · {formatDate(schedule.date)}, {schedule.startTime} WIB
-          </dd>
           <dt className="text-slate-500">Lokasi</dt>
-          <dd className="text-slate-900">{schedule.location}</dd>
+          <dd className="text-slate-900">{o.location}</dd>
         </>
       )}
       <dt className="text-slate-500">Total</dt>
-      <dd className="font-bold text-slate-900">{formatRupiah(b.amount)}</dd>
-      {b.status === "paid" && (
+      <dd className="font-bold text-slate-900">{formatRupiah(o.total)}</dd>
+      {o.payment.step === "paid" && (
         <>
           <dt className="text-slate-500">Dibayar</dt>
           <dd className="text-slate-900">
-            {b.method} · {b.paidAt}
+            {getMethod(o.payment.method).label} · {formatTimestamp(o.payment.paidAt)}
           </dd>
         </>
       )}
     </dl>
   );
 
-  if (b.status === "paid") {
+  if (status === "paid") {
     return (
       <ResultShell
         tone="bg-emerald-50 ring-emerald-200"
         Icon={CircleCheck}
         iconClass="text-emerald-600"
         title="Pembayaran lunas!"
-        message="Asik, slot kamu udah aman. Sampai ketemu di lapangan!"
+        message={copy.paidMessage}
       >
         {details}
       </ResultShell>
     );
   }
 
-  if (b.status === "pending") {
+  if (status === "pending") {
     return (
       <ResultShell
         tone="bg-amber-50 ring-amber-200"
         Icon={Clock}
         iconClass="text-amber-600"
-        title="Menunggu pembayaran"
-        message={`Bayar sebelum ${b.payBefore} biar slot kamu nggak dilepas, ya.`}
+        title={o.payment.step === "failed" ? "Pembayaran terakhir gagal" : "Menunggu pembayaran"}
+        message={`Bayar sebelum ${formatTimestamp(o.expiresAt)} biar slot kamu nggak dilepas, ya.`}
       >
         {details}
         <Link
-          href="/payment"
+          href={`/payment?booking=${o.id}`}
           className="mt-5 block rounded-full bg-blue-500 py-3 text-center font-semibold text-white transition hover:bg-blue-600"
         >
-          Bayar Sekarang
+          {o.payment.step === "failed" ? "Coba Bayar Lagi" : "Bayar Sekarang"}
         </Link>
       </ResultShell>
     );
@@ -242,16 +241,16 @@ function ResultCard({ result }: { result: Result }) {
       tone="bg-red-50 ring-red-200"
       Icon={CalendarX}
       iconClass="text-red-600"
-      title="Booking-nya udah kedaluwarsa"
-      message="Waktu bayarnya udah lewat dan slotnya udah dilepas. Booking ulang, yuk!"
+      title="Pesanannya udah kedaluwarsa"
+      message={`Waktu bayarnya udah lewat, ${copy.expiredNote}`}
     >
       {details}
-      <a
-        href="#jadwal"
+      <Link
+        href={copy.recover.href}
         className="mt-5 block rounded-full border border-blue-500 py-3 text-center font-semibold text-blue-600 transition hover:bg-blue-50"
       >
-        Cari Jadwal Lain
-      </a>
+        {copy.recover.label}
+      </Link>
     </ResultShell>
   );
 }

@@ -21,8 +21,8 @@ import {
   X,
 } from "@/app/components/icons";
 import type { Community, Schedule } from "@/app/data/schedules";
-import { newBookingId } from "@/app/lib/bookingId";
 import { formatDate, formatRupiah } from "@/app/lib/format";
+import { createOrder } from "@/app/lib/orders";
 import { formatPhone, isValidPhone, normalizePhone } from "@/app/lib/phone";
 import { findVoucher, priceBreakdown, type Position, type Voucher } from "@/app/lib/pricing";
 
@@ -114,7 +114,25 @@ export default function BookingCheckout({
     }
     setLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 800)); // pretend to create the booking
-    router.push(`/payment?booking=${newBookingId()}`);
+    // Same rows as the summary on the right, so the payment page shows exactly what was agreed.
+    const order = createOrder({
+      kind: "jadwal",
+      account: user?.email, // logged-in bookings show up in the account history
+      refId: s.id,
+      title: s.title,
+      subtitle: `${community.name} · ${formatDate(s.date)}, ${s.startTime} WIB`,
+      location: s.location,
+      contact: { name: name.trim(), phone },
+      lines: [
+        ...(price.players > 0 ? [{ label: `Player × ${price.players}`, amount: price.players * s.playerFee }] : []),
+        ...(price.keepers > 0 ? [{ label: `Kiper (GK) × ${price.keepers}`, amount: price.keepers * s.gkFee }] : []),
+        ...(price.memberDiscount > 0 ? [{ label: "Diskon member 10%", amount: -price.memberDiscount }] : []),
+        ...(price.voucherDiscount > 0 && voucher ? [{ label: `Voucher ${voucher.code}`, amount: -price.voucherDiscount }] : []),
+        { label: "Biaya layanan", amount: price.serviceFee },
+      ],
+      total: price.total,
+    });
+    router.push(`/payment?booking=${order.id}`);
   };
 
   return (

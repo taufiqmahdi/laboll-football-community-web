@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useAuth } from "@/app/components/auth/AuthProvider";
 import { Check, Copy, Lock } from "@/app/components/icons";
 
@@ -71,7 +72,15 @@ export default function VoucherCode({ code }: { code: string }) {
         {unlocked
           ? "Tunjukin kode ini ke kasir sebelum bayar, ya."
           : user
-            ? "Voucher ini khusus member Laboll. Upgrade jadi member buat pakai, ya!"
+            ? (
+              <>
+                Voucher ini khusus member Laboll.{" "}
+                <Link href="/member" className="font-semibold text-white underline underline-offset-2">
+                  Gabung jadi member
+                </Link>{" "}
+                buat pakai, ya!
+              </>
+            )
             : "Voucher ini khusus member Laboll. Masuk pakai akun member buat lihat kodenya."}
       </p>
     </div>

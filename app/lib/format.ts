@@ -90,3 +90,35 @@ export function isInSameWeek(iso: string, today: string) {
   const sunday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 6);
   return iso >= toIso(monday) && iso <= toIso(sunday);
 }
+
+const WIB_OFFSET_MS = 7 * 60 * 60 * 1000;
+
+// Timestamp (ms) -> "Sabtu, 10 Okt 2026 · 21:05 WIB", always in Jakarta time whatever the device's timezone.
+export function formatTimestamp(ms: number) {
+  const d = new Date(ms + WIB_OFFSET_MS);
+  return `${DAYS[d.getUTCDay()]}, ${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()} · ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())} WIB`;
+}
+
+// A WIB wall-clock time -> timestamp (ms). Month is 1-based.
+export function wibTime(y: number, m: number, d: number, h = 0, min = 0) {
+  return Date.UTC(y, m - 1, d, h, min) - WIB_OFFSET_MS;
+}
+
+// Remaining ms -> "59:07", "1:02:03" or "2 hari 03:04:05".
+export function formatCountdown(ms: number) {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const days = Math.floor(total / 86400);
+  const h = Math.floor((total % 86400) / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  if (days > 0) return `${days} hari ${pad(h)}:${pad(m)}:${pad(s)}`;
+  return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+}
+
+// "2026-10-10" + 1 -> "2027-10-10"; 29 Feb falls back to 28 Feb in non-leap years.
+export function addYears(iso: string, years: number) {
+  const [y, m, d] = iso.split("-").map(Number);
+  const date = new Date(Date.UTC(y + years, m - 1, d));
+  if (date.getUTCMonth() !== m - 1) date.setUTCDate(0); // rolled into March: step back to the last day of Feb
+  return date.toISOString().slice(0, 10);
+}

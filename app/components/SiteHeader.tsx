@@ -13,11 +13,13 @@ import {
   Crown,
   LogOut,
   Menu,
+  ReceiptText,
   ShoppingBag,
   X,
   type LucideIcon,
 } from "@/app/components/icons";
 import type { User } from "@/app/lib/auth";
+import { formatDayMonth } from "@/app/lib/format";
 
 const announcements: { text: string; Icon: LucideIcon }[] = [
   { text: "Member dapet diskon 10% buat semua pertandingan", Icon: BadgePercent },
@@ -34,6 +36,7 @@ const navLinks = [
   { href: "/merchants", label: "Merchant" },
   { href: "/merchandise", label: "Merchandise" },
   { href: "/tournament", label: "Turnamen" },
+  { href: "/member", label: "Member" },
 ];
 
 export default function SiteHeader() {
@@ -134,24 +137,36 @@ export default function SiteHeader() {
             </ul>
             <div className="mt-3 border-t border-slate-100 pt-4">
               {user ? (
-                <div className="flex items-center gap-3">
-                  <Initials user={user} />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-semibold text-slate-900">{user.name}</p>
-                    <p className="truncate text-xs text-slate-500">{user.email}</p>
+                <>
+                  <div className="flex items-center gap-3">
+                    <Initials user={user} />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-semibold text-slate-900">{user.name}</p>
+                      <p className="truncate text-xs text-slate-500">{user.email}</p>
+                      <MemberStatus user={user} onNavigate={() => setMenuOpen(false)} />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        logout();
+                      }}
+                      className="flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50"
+                    >
+                      <LogOut className="size-4" />
+                      Keluar
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMenuOpen(false);
-                      logout();
-                    }}
-                    className="flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50"
+                  <Link
+                    href="/account"
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={isActive("/account") ? "page" : undefined}
+                    className="mt-3 flex items-center justify-center gap-2 rounded-xl bg-slate-50 px-4 py-3 font-semibold text-slate-700 transition hover:bg-slate-100"
                   >
-                    <LogOut className="size-4" />
-                    Keluar
-                  </button>
-                </div>
+                    <ReceiptText className="size-4" />
+                    Akun & riwayat booking
+                  </Link>
+                </>
               ) : (
                 <div className="grid grid-cols-2 gap-2">
                   <AuthButtons
@@ -243,15 +258,16 @@ function UserMenu({ user, onLogout }: { user: User; onLogout: () => void }) {
           <div className="px-3 py-2">
             <p className="truncate font-semibold text-slate-900">{user.name}</p>
             <p className="truncate text-xs text-slate-500">{user.email}</p>
-            {user.isMember ? (
-              <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">
-                <BadgeCheck className="size-3.5" />
-                Member Laboll
-              </span>
-            ) : (
-              <span className="mt-2 inline-block text-xs text-slate-500">Belum member · diskon 10% nunggu kamu!</span>
-            )}
+            <MemberStatus user={user} onNavigate={() => setOpen(false)} />
           </div>
+          <Link
+            href="/account"
+            onClick={() => setOpen(false)}
+            className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          >
+            <ReceiptText className="size-4" />
+            Akun & riwayat booking
+          </Link>
           <button
             type="button"
             onClick={() => {
@@ -266,5 +282,27 @@ function UserMenu({ user, onLogout }: { user: User; onLogout: () => void }) {
         </div>
       )}
     </div>
+  );
+}
+
+// Member badge (with the end date) or an invitation to join; both lead to /member.
+function MemberStatus({ user, onNavigate }: { user: User; onNavigate: () => void }) {
+  if (user.isMember && user.membership) {
+    return (
+      <Link
+        href="/member"
+        onClick={onNavigate}
+        className="mt-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800 transition hover:bg-amber-200"
+      >
+        <BadgeCheck className="size-3.5" />
+        Member s/d {formatDayMonth(user.membership.until)} {user.membership.until.slice(0, 4)}
+      </Link>
+    );
+  }
+  return (
+    <Link href="/member" onClick={onNavigate} className="mt-2 inline-block text-xs text-slate-500 transition hover:text-blue-600">
+      {user.membership ? "Membership berakhir" : "Belum member"} ·{" "}
+      <span className="font-semibold text-blue-600">Gabung, yuk!</span>
+    </Link>
   );
 }

@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import ComingSoon from "@/app/components/ComingSoon";
+import PaymentFlow from "@/app/components/payment/PaymentFlow";
 import { checkBookingId } from "@/app/lib/bookingId";
+
+export const metadata: Metadata = {
+  title: "Pembayaran · Laboll",
+  robots: { index: false }, // per-booking pages, nothing to index
+};
 
 export default async function PaymentPage({
   searchParams,
@@ -12,23 +19,22 @@ export default async function PaymentPage({
   if (!bookingId) {
     return (
       <ComingSoon
-        title="Cek pembayaran sebentar lagi bisa"
-        message="Nanti kamu bisa cek status pembayaran booking-mu di sini. Sabar bentar, ya!"
+        title="Pilih booking yang mau dibayar"
+        message="Buka halaman ini dari tombol bayar setelah booking, atau cek booking ID kamu dulu di beranda."
+        backHref="/#cek-pembayaran"
+        backLabel="Cek status pembayaran"
       />
     );
   }
 
   return (
-    <ComingSoon
-      title="Booking kamu udah dibuat!"
-      message="Halaman pembayarannya lagi kita siapin. Simpan booking ID ini buat cek status pembayaran nanti, ya."
-      backHref="/#cek-pembayaran"
-      backLabel="Cek status pembayaran"
-    >
-      <div className="mt-6 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-        <p className="text-sm text-slate-500">Booking ID kamu</p>
-        <p className="mt-1 font-mono text-2xl font-bold tracking-wider text-slate-900">{bookingId}</p>
+    <main className="w-full flex-1 bg-slate-50 pb-16">
+      <div className="mx-auto max-w-6xl px-4 pt-6 md:px-8 md:pt-10">
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">Pembayaran</h1>
+        <div className="mt-6">
+          <PaymentFlow id={bookingId} />
+        </div>
       </div>
-    </ComingSoon>
+    </main>
   );
 }
