@@ -7,7 +7,7 @@ import ChoiceTile from "@/app/components/forms/ChoiceTile";
 import { ErrorText, Field, InputShell } from "@/app/components/forms/Field";
 import { statusInfo } from "@/app/components/merchandise/ProductCard";
 import ShareButton from "@/app/components/news/ShareButton";
-import { Crown, Hash, Hourglass, MessageCircle, Minus, Plus, Ruler, UserRound } from "@/app/components/icons";
+import { Crown, Hash, Hourglass, LogIn, MessageCircle, Minus, Plus, Ruler, UserRound } from "@/app/components/icons";
 import { MEMBER_DISCOUNT, memberPrice, type Product } from "@/app/data/merchandise";
 import { SIZES, type ProductDetail, type Size } from "@/app/data/merchandiseDetails";
 import { whatsappLink } from "@/app/data/site";
@@ -37,6 +37,7 @@ export default function ProductPurchase({ product: p, detail }: { product: Produ
   const sizeError = submitted && !size ? "Pilih ukuran dulu, ya." : "";
 
   function order() {
+    if (!user) return openAuth("login"); // orders go out under an account name
     setSubmitted(true);
     if (!size) {
       document.getElementById("field-size")?.focus();
@@ -50,7 +51,7 @@ export default function ProductPurchase({ product: p, detail }: { product: Produ
       backName.trim() && `• Nama punggung: ${backName.trim()}`,
       backNumber && `• Nomor punggung: ${backNumber}`,
       `• Total: ${formatRupiah(total)}${isMember ? " (harga member)" : ""}`,
-      user && `Atas nama: ${user.name}`,
+      `Atas nama: ${user.name}`,
     ].filter(Boolean);
     window.open(whatsappLink(lines.join("\n")), "_blank", "noopener,noreferrer");
   }
@@ -281,12 +282,26 @@ export default function ProductPurchase({ product: p, detail }: { product: Produ
           disabled={poClosed}
           className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-blue-500 py-3.5 font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
         >
-          <MessageCircle className="size-5" />
-          {poClosed ? "Pre-order udah ditutup" : p.preorder ? "Ikut Pre-order via WhatsApp" : "Pesan via WhatsApp"}
+          {!poClosed && !user ? <LogIn className="size-5" /> : <MessageCircle className="size-5" />}
+          {poClosed
+            ? "Pre-order udah ditutup"
+            : !user
+              ? "Masuk buat pesan"
+              : p.preorder
+                ? "Ikut Pre-order via WhatsApp"
+                : "Pesan via WhatsApp"}
         </button>
         {submitted && !size && (
           <p role="alert" className="mt-3 text-center text-sm text-red-600">
             Ukurannya belum dipilih, cek lagi, ya.
+          </p>
+        )}
+        {!poClosed && !user && (
+          <p className="mt-3 text-center text-sm text-slate-600">
+            Pesanan cuma bisa dibuat pakai akun.{" "}
+            <button type="button" onClick={() => openAuth("register")} className="font-semibold text-blue-600 hover:underline">
+              Belum punya akun?
+            </button>
           </p>
         )}
         <p className="mt-3 text-center text-xs text-slate-500">

@@ -11,6 +11,7 @@ import {
   Clock,
   LoaderCircle,
   Lock,
+  LogIn,
   Mail,
   MapPin,
   Phone,
@@ -106,6 +107,8 @@ export default function BookingCheckout({
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    // Bookings belong to an account. Logging in keeps what's typed and fills the rest.
+    if (!user) return openAuth("login");
     setSubmitted(true);
     const firstError = Object.keys(errors)[0];
     if (firstError) {
@@ -117,7 +120,7 @@ export default function BookingCheckout({
     // Same rows as the summary on the right, so the payment page shows exactly what was agreed.
     const order = createOrder({
       kind: "jadwal",
-      account: user?.email, // logged-in bookings show up in the account history
+      account: user.email, // shows up in the account history
       refId: s.id,
       title: s.title,
       subtitle: `${community.name} · ${formatDate(s.date)}, ${s.startTime} WIB`,
@@ -416,6 +419,11 @@ export default function BookingCheckout({
                   <LoaderCircle className="size-5 animate-spin" />
                   Lagi proses...
                 </>
+              ) : !user ? (
+                <>
+                  <LogIn className="size-4" />
+                  Masuk buat lanjut bayar
+                </>
               ) : (
                 <>
                   <Lock className="size-4" />
@@ -423,6 +431,14 @@ export default function BookingCheckout({
                 </>
               )}
             </button>
+            {!user && (
+              <p className="mt-3 text-center text-sm text-slate-600">
+                Booking cuma bisa dibuat pakai akun, biar gampang dicek di riwayat.{" "}
+                <button type="button" onClick={() => openAuth("register")} className="font-semibold text-blue-600 hover:underline">
+                  Belum punya akun?
+                </button>
+              </p>
+            )}
             {submitted && Object.keys(errors).length > 0 && (
               <p role="alert" className="mt-3 text-center text-sm text-red-600">
                 Masih ada data yang belum lengkap, cek lagi, ya.

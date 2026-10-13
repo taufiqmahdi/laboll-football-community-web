@@ -11,6 +11,7 @@ import {
   Check,
   LoaderCircle,
   Lock,
+  LogIn,
   Mail,
   MapPin,
   Phone,
@@ -47,7 +48,7 @@ export default function TournamentRegistration({
   technicalMeeting: string;
 }) {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, openAuth } = useAuth();
   const { state, daysLeft } = registrationState(t, useToday());
   const nextPlayerId = useRef(0);
   const focusPlayerId = useRef<number | null>(null);
@@ -116,6 +117,8 @@ export default function TournamentRegistration({
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (state !== "open") return;
+    // Registrations belong to an account. Logging in keeps what's typed and fills the rest.
+    if (!user) return openAuth("login");
     setSubmitted(true);
     const firstError = Object.keys(errors)[0];
     if (firstError) {
@@ -126,7 +129,7 @@ export default function TournamentRegistration({
     await new Promise((resolve) => setTimeout(resolve, 800)); // pretend to create the registration
     const order = createOrder({
       kind: "turnamen",
-      account: user?.email, // logged-in bookings show up in the account history
+      account: user.email, // shows up in the account history
       refId: t.id,
       title: `${t.name} ${t.edition}`,
       subtitle: `Tim ${trimmedTeam} · ${formatDayMonth(t.startDate)} – ${formatDayMonth(t.endDate)}`,
@@ -407,6 +410,11 @@ export default function TournamentRegistration({
                     <LoaderCircle className="size-5 animate-spin" />
                     Lagi proses...
                   </>
+                ) : !user ? (
+                  <>
+                    <LogIn className="size-4" />
+                    Masuk buat lanjut daftar
+                  </>
                 ) : (
                   <>
                     <Lock className="size-4" />
@@ -417,6 +425,14 @@ export default function TournamentRegistration({
             ) : (
               <p role="status" className="mt-5 rounded-xl bg-slate-100 px-4 py-3 text-center text-sm font-semibold text-slate-600">
                 Pendaftaran udah ditutup.
+              </p>
+            )}
+            {state === "open" && !user && (
+              <p className="mt-3 text-center text-sm text-slate-600">
+                Pendaftaran cuma bisa lewat akun kapten, biar gampang dicek di riwayat.{" "}
+                <button type="button" onClick={() => openAuth("register")} className="font-semibold text-blue-600 hover:underline">
+                  Belum punya akun?
+                </button>
               </p>
             )}
             {submitted && Object.keys(errors).length > 0 && (

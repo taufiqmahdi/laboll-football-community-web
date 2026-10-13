@@ -41,6 +41,7 @@ export {
   ListChecks,
   LoaderCircle,
   Lock,
+  LogIn,
   LogOut,
   Mail,
   MapPin,
